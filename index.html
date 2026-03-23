@@ -32,19 +32,6 @@
 </head>
 <body>
 
-    <div id="marcador-obs">
-        <div class="score-box">
-            <img id="viewLogoL" class="logo-img" style="display:none">
-            <span id="viewNameL" class="team-name">LOCAL</span>
-            <span id="viewScoreL" class="score-num">0</span>
-            <span style="font-size: 30px;">-</span>
-            <span id="viewScoreV" class="score-num">0</span>
-            <span id="viewNameV" class="team-name">VISITA</span>
-            <img id="viewLogoV" class="logo-img" style="display:none">
-            <div id="viewTime" class="timer-display">00:00</div>
-        </div>
-    </div>
-
     <div id="panel-control">
         <h3>Configuración Pro</h3>
         <div class="input-group">
@@ -61,6 +48,21 @@
             <button class="btn-time" style="background:#e74c3c" onclick="resetT()">RESET</button>
         </div>
     </div>
+    
+    <div id="marcador-obs">
+        <div class="score-box">
+            <img id="viewLogoL" class="logo-img" style="display:none">
+            <span id="viewNameL" class="team-name">LOCAL</span>
+            <span id="viewScoreL" class="score-num">0</span>
+            <span style="font-size: 30px;">-</span>
+            <span id="viewScoreV" class="score-num">0</span>
+            <span id="viewNameV" class="team-name">VISITA</span>
+            <img id="viewLogoV" class="logo-img" style="display:none">
+            <div id="viewTime" class="timer-display">00:00</div>
+        </div>
+    </div>
+
+
 
     <script>
         let data = { scoreL: 0, scoreV: 0, sec: 0, active: false };
