@@ -2,97 +2,219 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Marcador Unificado Jony</title>
+    <title>Jony Ultra Broadcast 2026 - Squircle Pro</title>
     <style>
-        :root { --accent: #ffd700; }
-        body { background: #1a1a1a; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        :root { --bg-panel: #121212; --accent-l: #ffd700; --accent-v: #ffffff; --red: #ff4d4d; --yellow: #ffeb3b; }
+        body { background: transparent; margin: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: white; display: flex; flex-direction: column; align-items: center; }
 
-        /* --- SECCIÓN 1: EL MARCADOR (Lo que va a OBS) --- */
+        /* --- MARCADOR ULTRA PRO (OBS) --- */
         #marcador-obs {
-            background: rgba(0,0,0,0.9); width: 100%; padding: 20px 0;
-            display: flex; justify-content: center; align-items: center;
-            border-bottom: 5px solid var(--accent);
+            padding: 20px; width: 100%; display: flex; flex-direction: column; align-items: center;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
         }
-        .score-box { display: flex; align-items: center; gap: 20px; background: #111; padding: 10px 30px; border-radius: 8px; }
-        .team-name { font-size: 28px; font-weight: 800; text-transform: uppercase; }
-        .score-num { font-size: 45px; font-weight: 900; color: var(--accent); min-width: 60px; text-align: center; }
-        .timer-display { font-family: monospace; font-size: 35px; margin-left: 30px; border-left: 2px solid #444; padding-left: 30px; }
-        .logo-img { width: 50px; height: 50px; object-fit: contain; }
+        
+        .main-bar {
+            display: flex; align-items: center; background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px); border-radius: 15px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+            height: 65px;
+        }
 
-        /* --- SECCIÓN 2: EL PANEL (Solo para ti) --- */
-        #panel-control { padding: 30px; width: 450px; background: #222; margin-top: 20px; border-radius: 12px; border: 1px solid #444; }
-        .input-group { margin-bottom: 15px; }
-        input { width: 100%; padding: 8px; background: #333; border: 1px solid #555; color: white; margin-bottom: 5px; border-radius: 4px; }
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        button { padding: 12px; cursor: pointer; font-weight: bold; border: none; border-radius: 4px; transition: 0.2s; }
-        .btn-gol { background: var(--accent); color: black; }
-        .btn-time { background: #3498db; color: white; }
-        button:active { transform: scale(0.95); }
+        .team-block { display: flex; align-items: center; padding: 0 20px; gap: 15px; min-width: 180px; height: 100%; position: relative; }
+        .local-side { border-right: 4px solid var(--accent-l); }
+        .visit-side { border-right: 4px solid var(--accent-v); } 
+        
+        .score-display { 
+            font-size: 38px; font-weight: 900; width: 55px; text-align: center; 
+            background: #000; color: #fff; height: 100%; display: flex; align-items: center; justify-content: center; 
+            border-radius: 8px; margin: 0 10px; transition: all 0.3s;
+        }
+        
+        /* Indicadores de Tarjetas Squircle */
+        .cards-container { position: absolute; bottom: 4px; display: flex; gap: 3px; left: 50%; transform: translateX(-50%); }
+        .card-dot { width: 8px; height: 12px; border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+
+        .team-name { font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .logo-frame { width: 42px; height: 42px; object-fit: contain; border-radius: 12px; background: rgba(255,255,255,0.05); padding: 2px; }
+        
+        /* Reloj y Periodo */
+        .timer-container { display: flex; align-items: center; background: #222; height: 100%; border-left: 2px solid #444; padding: 0 15px; }
+        .period-tag { background: #444; color: #aaa; padding: 2px 6px; border-radius: 4px; font-size: 14px; font-weight: 800; margin-right: 10px; }
+        .time-val { font-family: 'Courier New', monospace; font-size: 28px; font-weight: bold; color: #ffd700; }
+        
+        /* Tiempo Agregado */
+        #viewAdded { background: #c0392b; color: white; padding: 0 10px; font-size: 22px; font-weight: 900; display: none; align-items: center; height: 100%; border-left: 1px solid rgba(255,255,255,0.2); }
+
+        .mosca-integra { background: #000; padding: 0 15px; height: 100%; display: flex; align-items: center; border-left: 2px solid #444; min-width: 80px; justify-content: center; border-radius: 0 15px 15px 0; }
+        .mosca-img { max-width: 90px; max-height: 40px; object-fit: contain; border-radius: 10px; }
+
+        /* Ticker Patrocinadores */
+        .ticker-wrap { width: 580px; background: rgba(0,0,0,0.8); margin-top: 10px; overflow: hidden; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .ticker-move { display: flex; white-space: nowrap; animation: ticker 25s linear infinite; padding: 5px 0; }
+        .ticker-item { padding: 0 40px; color: #aaa; font-size: 13px; font-weight: bold; text-transform: uppercase; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* --- PANEL DE CONTROL --- */
+        #panel-control { 
+            margin-top: 40px; width: 650px; background: var(--bg-panel); padding: 25px; 
+            border-radius: 20px; border: 2px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            margin-bottom: 50px;
+        }
+        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .control-group { background: #1e1e1e; padding: 12px; border-radius: 10px; border: 1px solid #333; }
+        h4 { margin: 0 0 8px 0; font-size: 10px; color: #888; text-transform: uppercase; }
+        .score-row { display: flex; gap: 5px; margin-top: 10px; }
+        .btn { border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; padding: 10px; text-transform: uppercase; font-size: 11px;}
+        .card-btn { width: 30px; height: 40px; border-radius: 4px; border: 2px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-    <div id="panel-control">
-        <h3>Configuración Pro</h3>
-        <div class="input-group">
-            <input type="text" id="inL" placeholder="Nombre Local" oninput="sync()">
-            <input type="file" id="imgL" accept="image/*" onchange="handleImg(event, 'L')">
-            <input type="text" id="inV" placeholder="Nombre Visitante" oninput="sync()">
-            <input type="file" id="imgV" accept="image/*" onchange="handleImg(event, 'V')">
-            <input type="color" id="inCol" value="#ffd700" onchange="sync()">
-        </div>
-        <div class="btn-grid">
-            <button class="btn-gol" onclick="addScore('L')">GOL LOCAL</button>
-            <button class="btn-gol" onclick="addScore('V')">GOL VISITA</button>
-            <button class="btn-time" id="tBtn" onclick="toggleT()">INICIAR</button>
-            <button class="btn-time" style="background:#e74c3c" onclick="resetT()">RESET</button>
-        </div>
-    </div>
-    
     <div id="marcador-obs">
-        <div class="score-box">
-            <img id="viewLogoL" class="logo-img" style="display:none">
-            <span id="viewNameL" class="team-name">LOCAL</span>
-            <span id="viewScoreL" class="score-num">0</span>
-            <span style="font-size: 30px;">-</span>
-            <span id="viewScoreV" class="score-num">0</span>
-            <span id="viewNameV" class="team-name">VISITA</span>
-            <img id="viewLogoV" class="logo-img" style="display:none">
-            <div id="viewTime" class="timer-display">00:00</div>
+        <div class="main-bar">
+            <div class="team-block local-side">
+                <img id="viewLogoL" class="logo-frame" style="display:none">
+                <span id="viewNameL" class="team-name">LOCAL</span>
+                <div id="viewScoreL" class="score-display">0</div>
+                <div id="viewCardsL" class="cards-container"></div>
+            </div>
+            
+            <div class="team-block visit-side">
+                <div id="viewScoreV" class="score-display">0</div>
+                <span id="viewNameV" class="team-name">VISITA</span>
+                <img id="viewLogoV" class="logo-frame" style="display:none">
+                <div id="viewCardsV" class="cards-container"></div>
+            </div>
+
+            <div class="timer-container">
+                <div id="viewPeriod" class="period-tag">1T</div>
+                <div id="viewTime" class="time-val">00:00</div>
+            </div>
+            <div id="viewAdded">+0</div>
+
+            <div class="mosca-integra">
+                <img id="viewLogoMosca" class="mosca-img" style="display:none">
+            </div>
+        </div>
+
+        <div class="ticker-wrap">
+            <div class="ticker-move">
+                <div class="ticker-item">● DIGITALITY BROADCAST PRO ●</div>
+                <div class="ticker-item" id="tickerText">PATROCINADOR OFICIAL ●</div>
+                <div class="ticker-item">ABRAZO DE GOL ●</div>
+            </div>
         </div>
     </div>
 
+    <div id="panel-control">
+        <h3 style="margin:0 0 20px 0; color: #ffd700; text-align: center;">Master Control Broadcast V4.0</h3>
+        
+        <div class="config-grid">
+            <div class="control-group">
+                <h4>Local</h4>
+                <input type="text" id="inL" placeholder="Nombre" oninput="sync()" style="width:100%; padding:5px; background:#333; color:white; border:none; border-radius:4px;">
+                <input type="file" onchange="handleImg(event, 'L')" accept="image/*" style="font-size:10px; margin:5px 0; width:100%;">
+                <input type="color" id="colL" value="#ffd700" onchange="sync()" style="width:100%; height:25px; border:none; cursor:pointer;">
+                <div class="score-row">
+                    <button class="btn" onclick="modScore('L', 1)" style="background:#27ae60; color:white; flex:2;">GOL +</button>
+                    <button class="btn" onclick="modScore('L', -1)" style="background:#444; color:white;">-</button>
+                </div>
+                <div class="score-row">
+                    <button class="card-btn" style="background:var(--yellow)" onclick="addCard('L', 'yellow')"></button>
+                    <button class="card-btn" style="background:var(--red)" onclick="addCard('L', 'red')"></button>
+                    <button class="btn" style="background:#222; color:#666;" onclick="clearCards('L')">LIMPIAR</button>
+                </div>
+            </div>
 
+            <div class="control-group">
+                <h4>Visitante</h4>
+                <input type="text" id="inV" placeholder="Nombre" oninput="sync()" style="width:100%; padding:5px; background:#333; color:white; border:none; border-radius:4px;">
+                <input type="file" onchange="handleImg(event, 'V')" accept="image/*" style="font-size:10px; margin:5px 0; width:100%;">
+                <input type="color" id="colV" value="#ffffff" onchange="sync()" style="width:100%; height:25px; border:none; cursor:pointer;">
+                <div class="score-row">
+                    <button class="btn" onclick="modScore('V', 1)" style="background:#27ae60; color:white; flex:2;">GOL +</button>
+                    <button class="btn" onclick="modScore('V', -1)" style="background:#444; color:white;">-</button>
+                </div>
+                <div class="score-row">
+                    <button class="card-btn" style="background:var(--yellow)" onclick="addCard('V', 'yellow')"></button>
+                    <button class="card-btn" style="background:var(--red)" onclick="addCard('V', 'red')"></button>
+                    <button class="btn" style="background:#222; color:#666;" onclick="clearCards('V')">LIMPIAR</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h4>Gestión de Juego & Ticker</h4>
+            <div style="display:flex; gap:10px;">
+                <select id="inPeriod" onchange="sync()" style="background:#333; color:white; border:none; padding:10px; border-radius:5px;">
+                    <option value="1T">1er Tiempo</option>
+                    <option value="2T">2do Tiempo</option>
+                    <option value="ET">Extra</option>
+                </select>
+                <input type="number" id="inAdded" placeholder="+ Min" oninput="sync()" style="width:70px; background:#333; color:white; border:none; padding:5px; border-radius:5px;">
+                <button class="btn" id="tBtn" onclick="toggleT()" style="background:#3498db; color:white; flex:1;">INICIAR TIEMPO</button>
+                <button class="btn" onclick="resetT()" style="background:#444; color:white;">RESET</button>
+            </div>
+            <input type="text" id="inTicker" placeholder="Mensaje patrocinador..." oninput="sync()" style="width:100%; margin-top:10px; padding:8px; background:#333; color:white; border:none; border-radius:4px;">
+            <div style="margin-top:10px;">
+                <label style="font-size:10px; color:#666;">LOGO CANAL:</label>
+                <input type="file" onchange="handleImg(event, 'Mosca')" accept="image/*" style="font-size:10px;">
+            </div>
+        </div>
+    </div>
 
     <script>
-        let data = { scoreL: 0, scoreV: 0, sec: 0, active: false };
+        let data = { scoreL:0, scoreV:0, sec:0, active:false };
         let timer;
 
         function sync() {
             document.getElementById('viewNameL').innerText = document.getElementById('inL').value || 'LOCAL';
             document.getElementById('viewNameV').innerText = document.getElementById('inV').value || 'VISITA';
-            const col = document.getElementById('inCol').value;
-            document.documentElement.style.setProperty('--accent', col);
+            document.getElementById('viewPeriod').innerText = document.getElementById('inPeriod').value;
+            document.documentElement.style.setProperty('--accent-l', document.getElementById('colL').value);
+            document.documentElement.style.setProperty('--accent-v', document.getElementById('colV').value);
+            
+            let add = document.getElementById('inAdded').value;
+            let vAdd = document.getElementById('viewAdded');
+            if(add > 0) { vAdd.innerText = "+" + add; vAdd.style.display = "flex"; }
+            else { vAdd.style.display = "none"; }
+            
+            const txt = document.getElementById('inTicker').value;
+            if(txt) document.getElementById('tickerText').innerText = txt + " ●";
         }
 
-        function handleImg(e, side) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const img = document.getElementById('viewLogo' + side);
-                img.src = reader.result;
-                img.style.display = 'block';
+        function modScore(s, v) {
+            data['score'+s] = Math.max(0, data['score'+s] + v);
+            document.getElementById('viewScore'+s).innerText = data['score'+s];
+            if(v > 0) { // Animación simple de flash al gol
+                let el = document.getElementById('viewScore'+s);
+                el.style.background = "#fff"; el.style.color = "#000";
+                setTimeout(() => { el.style.background = "#000"; el.style.color = "#fff"; }, 500);
             }
-            reader.readAsDataURL(e.target.files[0]);
         }
 
-        function addScore(side) {
-            data['score' + side]++;
-            document.getElementById('viewScore' + side).innerText = data['score' + side];
+        function addCard(s, color) {
+            let dot = document.createElement('div');
+            dot.className = 'card-dot';
+            dot.style.background = color === 'yellow' ? 'var(--yellow)' : 'var(--red)';
+            document.getElementById('viewCards'+s).appendChild(dot);
+        }
+
+        function clearCards(s) { document.getElementById('viewCards'+s).innerHTML = ''; }
+
+        function handleImg(e, s) {
+            const r = new FileReader();
+            r.onload = () => {
+                const img = document.getElementById('viewLogo' + s);
+                img.src = r.result; img.style.display = 'block';
+            }
+            if(e.target.files[0]) r.readAsDataURL(e.target.files[0]);
         }
 
         function toggleT() {
             data.active = !data.active;
-            document.getElementById('tBtn').innerText = data.active ? 'PAUSAR' : 'REANUDAR';
+            document.getElementById('tBtn').innerText = data.active ? 'PAUSAR' : 'INICIAR';
+            document.getElementById('tBtn').style.background = data.active ? '#e67e22' : '#3498db';
             if(data.active) {
                 timer = setInterval(() => {
                     data.sec++;
@@ -101,7 +223,6 @@
                 }, 1000);
             } else clearInterval(timer);
         }
-
         function resetT() { data.sec = 0; document.getElementById('viewTime').innerText = "00:00"; }
     </script>
 </body>
