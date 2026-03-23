@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Marcador Unificado Jony</title>
+    <style>
+        :root { --accent: #ffd700; }
+        body { background: #1a1a1a; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
+
+        /* --- SECCIÓN 1: EL MARCADOR (Lo que va a OBS) --- */
+        #marcador-obs {
+            background: rgba(0,0,0,0.9); width: 100%; padding: 20px 0;
+            display: flex; justify-content: center; align-items: center;
+            border-bottom: 5px solid var(--accent);
+        }
+        .score-box { display: flex; align-items: center; gap: 20px; background: #111; padding: 10px 30px; border-radius: 8px; }
+        .team-name { font-size: 28px; font-weight: 800; text-transform: uppercase; }
+        .score-num { font-size: 45px; font-weight: 900; color: var(--accent); min-width: 60px; text-align: center; }
+        .timer-display { font-family: monospace; font-size: 35px; margin-left: 30px; border-left: 2px solid #444; padding-left: 30px; }
+        .logo-img { width: 50px; height: 50px; object-fit: contain; }
+
+        /* --- SECCIÓN 2: EL PANEL (Solo para ti) --- */
+        #panel-control { padding: 30px; width: 450px; background: #222; margin-top: 20px; border-radius: 12px; border: 1px solid #444; }
+        .input-group { margin-bottom: 15px; }
+        input { width: 100%; padding: 8px; background: #333; border: 1px solid #555; color: white; margin-bottom: 5px; border-radius: 4px; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        button { padding: 12px; cursor: pointer; font-weight: bold; border: none; border-radius: 4px; transition: 0.2s; }
+        .btn-gol { background: var(--accent); color: black; }
+        .btn-time { background: #3498db; color: white; }
+        button:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <div id="marcador-obs">
+        <div class="score-box">
+            <img id="viewLogoL" class="logo-img" style="display:none">
+            <span id="viewNameL" class="team-name">LOCAL</span>
+            <span id="viewScoreL" class="score-num">0</span>
+            <span style="font-size: 30px;">-</span>
+            <span id="viewScoreV" class="score-num">0</span>
+            <span id="viewNameV" class="team-name">VISITA</span>
+            <img id="viewLogoV" class="logo-img" style="display:none">
+            <div id="viewTime" class="timer-display">00:00</div>
+        </div>
+    </div>
+
+    <div id="panel-control">
+        <h3>Configuración Pro</h3>
+        <div class="input-group">
+            <input type="text" id="inL" placeholder="Nombre Local" oninput="sync()">
+            <input type="file" id="imgL" accept="image/*" onchange="handleImg(event, 'L')">
+            <input type="text" id="inV" placeholder="Nombre Visitante" oninput="sync()">
+            <input type="file" id="imgV" accept="image/*" onchange="handleImg(event, 'V')">
+            <input type="color" id="inCol" value="#ffd700" onchange="sync()">
+        </div>
+        <div class="btn-grid">
+            <button class="btn-gol" onclick="addScore('L')">GOL LOCAL</button>
+            <button class="btn-gol" onclick="addScore('V')">GOL VISITA</button>
+            <button class="btn-time" id="tBtn" onclick="toggleT()">INICIAR</button>
+            <button class="btn-time" style="background:#e74c3c" onclick="resetT()">RESET</button>
+        </div>
+    </div>
+
+    <script>
+        let data = { scoreL: 0, scoreV: 0, sec: 0, active: false };
+        let timer;
+
+        function sync() {
+            document.getElementById('viewNameL').innerText = document.getElementById('inL').value || 'LOCAL';
+            document.getElementById('viewNameV').innerText = document.getElementById('inV').value || 'VISITA';
+            const col = document.getElementById('inCol').value;
+            document.documentElement.style.setProperty('--accent', col);
+        }
+
+        function handleImg(e, side) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const img = document.getElementById('viewLogo' + side);
+                img.src = reader.result;
+                img.style.display = 'block';
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        function addScore(side) {
+            data['score' + side]++;
+            document.getElementById('viewScore' + side).innerText = data['score' + side];
+        }
+
+        function toggleT() {
+            data.active = !data.active;
+            document.getElementById('tBtn').innerText = data.active ? 'PAUSAR' : 'REANUDAR';
+            if(data.active) {
+                timer = setInterval(() => {
+                    data.sec++;
+                    let m = Math.floor(data.sec/60), s = data.sec%60;
+                    document.getElementById('viewTime').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                }, 1000);
+            } else clearInterval(timer);
+        }
+
+        function resetT() { data.sec = 0; document.getElementById('viewTime').innerText = "00:00"; }
+    </script>
+</body>
+</html>
