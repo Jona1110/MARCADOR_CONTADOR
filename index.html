@@ -2,15 +2,28 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Jony Ultra Broadcast 2026 - Squircle Pro</title>
+    <title>Jony Ultra Broadcast 2026 - Layout Inverso</title>
     <style>
         :root { --bg-panel: #121212; --accent-l: #ffd700; --accent-v: #ffffff; --red: #ff4d4d; --yellow: #ffeb3b; }
         body { background: transparent; margin: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: white; display: flex; flex-direction: column; align-items: center; }
 
-        /* --- MARCADOR ULTRA PRO (OBS) --- */
+        /* --- PANEL DE CONTROL (AHORA ARRIBA) --- */
+        #panel-control { 
+            margin-top: 20px; width: 650px; background: var(--bg-panel); padding: 25px; 
+            border-radius: 20px; border: 2px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            margin-bottom: 40px;
+        }
+        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .control-group { background: #1e1e1e; padding: 12px; border-radius: 10px; border: 1px solid #333; }
+        h4 { margin: 0 0 8px 0; font-size: 10px; color: #888; text-transform: uppercase; }
+        .score-row { display: flex; gap: 5px; margin-top: 10px; }
+        .btn { border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; padding: 10px; text-transform: uppercase; font-size: 11px;}
+        .card-btn { width: 30px; height: 40px; border-radius: 4px; border: 2px solid rgba(255,255,255,0.1); cursor: pointer; }
+
+        /* --- MARCADOR ULTRA PRO (AHORA ABAJO) --- */
         #marcador-obs {
             padding: 20px; width: 100%; display: flex; flex-direction: column; align-items: center;
-            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
         }
         
         .main-bar {
@@ -30,48 +43,31 @@
             border-radius: 8px; margin: 0 10px; transition: all 0.3s;
         }
         
-        /* Indicadores de Tarjetas Squircle */
         .cards-container { position: absolute; bottom: 4px; display: flex; gap: 3px; left: 50%; transform: translateX(-50%); }
         .card-dot { width: 8px; height: 12px; border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 
         .team-name { font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
         .logo-frame { width: 42px; height: 42px; object-fit: contain; border-radius: 12px; background: rgba(255,255,255,0.05); padding: 2px; }
         
-        /* Reloj y Periodo */
         .timer-container { display: flex; align-items: center; background: #222; height: 100%; border-left: 2px solid #444; padding: 0 15px; }
         .period-tag { background: #444; color: #aaa; padding: 2px 6px; border-radius: 4px; font-size: 14px; font-weight: 800; margin-right: 10px; }
         .time-val { font-family: 'Courier New', monospace; font-size: 28px; font-weight: bold; color: #ffd700; }
         
-        /* Tiempo Agregado */
         #viewAdded { background: #c0392b; color: white; padding: 0 10px; font-size: 22px; font-weight: 900; display: none; align-items: center; height: 100%; border-left: 1px solid rgba(255,255,255,0.2); }
 
         .mosca-integra { background: #000; padding: 0 15px; height: 100%; display: flex; align-items: center; border-left: 2px solid #444; min-width: 80px; justify-content: center; border-radius: 0 15px 15px 0; }
         .mosca-img { max-width: 90px; max-height: 40px; object-fit: contain; border-radius: 10px; }
 
-        /* Ticker Patrocinadores */
         .ticker-wrap { width: 580px; background: rgba(0,0,0,0.8); margin-top: 10px; overflow: hidden; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
         .ticker-move { display: flex; white-space: nowrap; animation: ticker 25s linear infinite; padding: 5px 0; }
         .ticker-item { padding: 0 40px; color: #aaa; font-size: 13px; font-weight: bold; text-transform: uppercase; }
         @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        /* --- PANEL DE CONTROL --- */
-        #panel-control { 
-            margin-top: 40px; width: 650px; background: var(--bg-panel); padding: 25px; 
-            border-radius: 20px; border: 2px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            margin-bottom: 50px;
-        }
-        .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        .control-group { background: #1e1e1e; padding: 12px; border-radius: 10px; border: 1px solid #333; }
-        h4 { margin: 0 0 8px 0; font-size: 10px; color: #888; text-transform: uppercase; }
-        .score-row { display: flex; gap: 5px; margin-top: 10px; }
-        .btn { border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; padding: 10px; text-transform: uppercase; font-size: 11px;}
-        .card-btn { width: 30px; height: 40px; border-radius: 4px; border: 2px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-     <div id="panel-control">
-        <h3 style="margin:0 0 20px 0; color: #ffd700; text-align: center;">Master Control Broadcast V4.0</h3>
+    <div id="panel-control">
+        <h3 style="margin:0 0 20px 0; color: #ffd700; text-align: center;">DIGITALITY Control Broadcast V4.1</h3>
         
         <div class="config-grid">
             <div class="control-group">
@@ -106,6 +102,26 @@
                 </div>
             </div>
         </div>
+
+        <div class="control-group">
+            <h4>Gestión de Juego & Ticker</h4>
+            <div style="display:flex; gap:10px;">
+                <select id="inPeriod" onchange="sync()" style="background:#333; color:white; border:none; padding:10px; border-radius:5px;">
+                    <option value="1T">1er Tiempo</option>
+                    <option value="2T">2do Tiempo</option>
+                    <option value="ET">Extra</option>
+                </select>
+                <input type="number" id="inAdded" placeholder="+ Min" oninput="sync()" style="width:70px; background:#333; color:white; border:none; padding:5px; border-radius:5px;">
+                <button class="btn" id="tBtn" onclick="toggleT()" style="background:#3498db; color:white; flex:1;">INICIAR TIEMPO</button>
+                <button class="btn" onclick="resetT()" style="background:#444; color:white;">RESET</button>
+            </div>
+            <input type="text" id="inTicker" placeholder="Mensaje patrocinador..." oninput="sync()" style="width:100%; margin-top:10px; padding:8px; background:#333; color:white; border:none; border-radius:4px;">
+            <div style="margin-top:10px;">
+                <label style="font-size:10px; color:#666;">LOGO CANAL:</label>
+                <input type="file" onchange="handleImg(event, 'Mosca')" accept="image/*" style="font-size:10px;">
+            </div>
+        </div>
+    </div>
 
     <div id="marcador-obs">
         <div class="main-bar">
@@ -143,28 +159,6 @@
         </div>
     </div>
 
-   
-
-        <div class="control-group">
-            <h4>Gestión de Juego & Ticker</h4>
-            <div style="display:flex; gap:10px;">
-                <select id="inPeriod" onchange="sync()" style="background:#333; color:white; border:none; padding:10px; border-radius:5px;">
-                    <option value="1T">1er Tiempo</option>
-                    <option value="2T">2do Tiempo</option>
-                    <option value="ET">Extra</option>
-                </select>
-                <input type="number" id="inAdded" placeholder="+ Min" oninput="sync()" style="width:70px; background:#333; color:white; border:none; padding:5px; border-radius:5px;">
-                <button class="btn" id="tBtn" onclick="toggleT()" style="background:#3498db; color:white; flex:1;">INICIAR TIEMPO</button>
-                <button class="btn" onclick="resetT()" style="background:#444; color:white;">RESET</button>
-            </div>
-            <input type="text" id="inTicker" placeholder="Mensaje patrocinador..." oninput="sync()" style="width:100%; margin-top:10px; padding:8px; background:#333; color:white; border:none; border-radius:4px;">
-            <div style="margin-top:10px;">
-                <label style="font-size:10px; color:#666;">LOGO CANAL:</label>
-                <input type="file" onchange="handleImg(event, 'Mosca')" accept="image/*" style="font-size:10px;">
-            </div>
-        </div>
-    </div>
-
     <script>
         let data = { scoreL:0, scoreV:0, sec:0, active:false };
         let timer;
@@ -188,7 +182,7 @@
         function modScore(s, v) {
             data['score'+s] = Math.max(0, data['score'+s] + v);
             document.getElementById('viewScore'+s).innerText = data['score'+s];
-            if(v > 0) { // Animación simple de flash al gol
+            if(v > 0) {
                 let el = document.getElementById('viewScore'+s);
                 el.style.background = "#fff"; el.style.color = "#000";
                 setTimeout(() => { el.style.background = "#000"; el.style.color = "#fff"; }, 500);
